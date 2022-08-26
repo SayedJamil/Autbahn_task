@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { User } from "./components/User";
-import { AddUser } from "./components/AddUser";
 import "./styles.css";
+import Dashboard from "./components/Dashboard";
 
 export default function App() {
   const [users, setUsers] = useState([]);
@@ -17,12 +16,12 @@ export default function App() {
       .catch((error) => console.log(error));
   };
 
-  const onAdd = async (name, email) => {
+  const onAdd = async (name, catchPhrase) => {
     await fetch("https://jsonplaceholder.typicode.com/users", {
-      method: "POST",
+      method: "catchPhrase",
       body: JSON.stringify({
         name: name,
-        email: email
+        catchPhrase: catchPhrase
       }),
       headers: {
         "Content-type": "application/json; charset=UTF-8"
@@ -41,12 +40,12 @@ export default function App() {
       .catch((error) => console.log(error));
   };
 
-  const onEdit = async (id, name, email) => {
+  const onEdit = async (id, name, catchPhrase) => {
     await fetch(`https://jsonplaceholder.typicode.com/users/${id}`, {
       method: "PUT",
       body: JSON.stringify({
         name: name,
-        email: email
+        catchPhrase: catchPhrase
       }),
       headers: {
         "Content-type": "application/json; charset=UTF-8"
@@ -64,7 +63,7 @@ export default function App() {
         const updatedUsers = users.map((user) => {
           if (user.id === id) {
             user.name = name;
-            user.email = email;
+            user.company.catchPhrase = catchPhrase;
           }
 
           return user;
@@ -95,18 +94,10 @@ export default function App() {
 
   return (
     <div className="App">
-      <h1>Users</h1>
-      <AddUser onAdd={onAdd} />
-      {users.map((user) => (
-        <User
-          id={user.id}
-          key={user.id}
-          name={user.name}
-          email={user.email}
-          onEdit={onEdit}
-          onDelete={onDelete}
-        />
-      ))}
+      <h1>CRUD App</h1>
+      <Dashboard users={users} onEdit={onEdit}
+        onDelete={onDelete} onAdd={onAdd} />
+
     </div>
   );
 }
